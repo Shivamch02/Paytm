@@ -1,3 +1,5 @@
 JWT_SECRET = "shivamsecret";
 
-module.exports = JWT_SECRET;
+module.exports = {
+  JWT_SECRET,
+};

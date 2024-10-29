@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-mongoose.connect(process.env.MONGO_URL);
+mongoose.connect(
+  ""
+);
 
 const userSchema = mongoose.Schema({
   username: {
@@ -38,7 +40,7 @@ const accountSchema = mongoose.Schema({
     required: true,
   },
   balance: {
-    type: number,
+    type: Number,
     required: true,
   },
 });

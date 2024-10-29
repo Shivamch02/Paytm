@@ -1,14 +1,8 @@
 const express = require("express");
-const zod = require("zod");
 const authMiddleware = require("../middleware");
 const { Account } = require("../db");
 
 const router = express.Router();
-
-const accountBody = zod.object({
-  userId: zod.string(),
-  balance: zod.number(),
-});
 
 router.get("/balance", authMiddleware, async (req, res) => {
   const account = await Account.findOne({
@@ -20,14 +14,45 @@ router.get("/balance", authMiddleware, async (req, res) => {
   });
 });
 
-router.post("/transfer", authMiddleware, (req, res) => {
-  const { success } = accountBody.safeParse(req.body);
+router.post("/transfer", authMiddleware, async (req, res) => {
+  const session = await mongoose.startSession();
 
-  if (!success) {
-    res.status(411).json({
-      msg: "Incorrect Input",
+  session.startTransaction();
+
+  const { to, amount } = req.body;
+
+  const account = await Account.findOne({ userId: req.userId }).session(
+    session
+  );
+
+  if (!account || account.balance < amount) {
+    await session.abortTransaction();
+    res.status(400).json({
+      msg: "Insufficient Balance",
     });
   }
+
+  const toAccount = await Account.findOne({ userId: to }).session(session);
+
+  if (!toAccount) {
+    await session.abortTransaction();
+    res.status(400).json({
+      msg: "Invalid Account",
+    });
+  }
+
+  await Account.findOneAndUpdate(account, {
+    $inc: { balance: -amount },
+  }).session(session);
+  await Account.findOneAndUpdate(toAccount, {
+    $inc: { balance: amount },
+  }).session(session);
+
+  await session.commitTransaction();
+
+  res.json({
+    msg: "Transfer Successfull",
+  });
 });
 
 module.exports = router;
