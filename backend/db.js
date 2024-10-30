@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
 
-mongoose.connect(
-  ""
-);
+mongoose.connect("");
 
 const userSchema = mongoose.Schema({
   username: {
@@ -25,7 +23,7 @@ const userSchema = mongoose.Schema({
     trim: true,
     maxLength: 50,
   },
-  LastName: {
+  lastName: {
     type: String,
     required: true,
     trim: true,
