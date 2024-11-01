@@ -1,6 +1,6 @@
 const express = require("express");
 const authMiddleware = require("../middleware");
-const { Account } = require("../db");
+const { Account, User } = require("../db");
 const mongoose = require("mongoose");
 
 const router = express.Router();
@@ -11,6 +11,10 @@ router.get("/balance", authMiddleware, async (req, res) => {
       userId: req.userId,
     });
 
+    const user = await User.findOne({
+      _id: req.userId,
+    });
+
     if (!account) {
       return res.status(404).json({
         message: "Account not found",
@@ -19,6 +23,9 @@ router.get("/balance", authMiddleware, async (req, res) => {
 
     return res.json({
       balance: account.balance,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      userId: user._id,
     });
   } catch (error) {
     return res.status(500).json({
@@ -68,8 +75,8 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     res.json({ msg: "Transfer Successful" });
   } catch (error) {
     // Abort the transaction in case of error
-    await session.abortTransaction();
     res.status(500).json({ msg: "Transfer Failed", error: error.message });
+    await session.abortTransaction();
   } finally {
     // End the session
     session.endSession();

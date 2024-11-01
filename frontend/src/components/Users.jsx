@@ -3,7 +3,7 @@ import Button from "./Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const Users = () => {
+const Users = ({ id }) => {
   // Replace with backend call
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
@@ -30,9 +30,11 @@ const Users = () => {
         ></input>
       </div>
       <div>
-        {users.map((user) => (
-          <User key={user._id} user={user} />
-        ))}
+        {users
+          .filter((user) => user._id !== id)
+          .map((user) => (
+            <User key={user._id} user={user} />
+          ))}
       </div>
     </>
   );
@@ -45,7 +47,7 @@ function User({ user }) {
       <div className="flex">
         <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
           <div className="flex flex-col justify-center h-full text-xl">
-            {user.firstName[0]}
+            {user.firstName[0].toUpperCase()}
           </div>
         </div>
         <div className="flex flex-col justify-center h-ful">
