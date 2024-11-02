@@ -52,7 +52,8 @@ function User({ user }) {
         </div>
         <div className="flex flex-col justify-center h-ful">
           <div>
-            {user.firstName} {user.lastName}
+            {user.firstName[0].toUpperCase() + user.firstName.slice(1)}{" "}
+            {user.lastName[0].toUpperCase() + user.lastName.slice(1)}
           </div>
         </div>
       </div>
