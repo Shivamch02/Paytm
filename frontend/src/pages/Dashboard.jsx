@@ -11,11 +11,16 @@ const Dashboard = () => {
   const [userId, setUserId] = useState("");
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/account/balance", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-      })
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/account/balance`,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
+        }
+      )
       .then((response) => {
         setBalance(response.data.balance.toFixed(2));
         setName(response.data.firstName + " " + response.data.lastName);

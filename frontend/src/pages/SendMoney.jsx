@@ -50,7 +50,9 @@ const SendMoney = () => {
                 <button
                   onClick={async () => {
                     const response = await axios.post(
-                      "http://localhost:3000/api/v1/account/transfer",
+                      `${
+                        import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+                      }/api/v1/account/transfer`,
                       {
                         to: id,
                         amount,
@@ -70,9 +72,7 @@ const SendMoney = () => {
                 </button>
               </div>
               <p className="text-green-500 text-center p-2">
-                {msg === "Transfer Successful"
-                  ? "Transaction Successful"
-                  : "Transaction failed"}
+                {msg === "Transfer Successful" ? "Transaction Successful" : ""}
               </p>
             </div>
           </div>

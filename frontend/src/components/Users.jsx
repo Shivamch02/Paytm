@@ -10,7 +10,11 @@ const Users = ({ id }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+      .get(
+        `${
+          import.meta.env.VITE_REACT_APP_BACKEND_BASEURL
+        }/api/v1/user/bulk?filter=` + filter
+      )
       .then((response) => {
         setUsers(response.data.user);
       });
